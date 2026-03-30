@@ -1,0 +1,22 @@
+# Clever Cloud Deployment
+# (Archivos de config deben subirse a Git)
+config/database_clevercloud.php
+
+# Development
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backups
+database/backups/
+*.sql.bak
+
+# Logs
+*.log

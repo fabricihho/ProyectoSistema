@@ -1,0 +1,24 @@
+Options +FollowSymLinks
+DirectoryIndex index.php index.html
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Servir assets directamente desde public/assets
+    RewriteRule ^assets/(.*)$ public/assets/$1 [L]
+    
+    # Servir favicon
+    RewriteRule ^favicon\.png$ public/favicon.png [L]
+    RewriteRule ^favicon\.ico$ public/favicon.ico [L]
+    
+    # Si el archivo existe en public, servirlo
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -f
+    RewriteRule ^(.*)$ public/$1 [L]
+    
+    # Todo lo demás va a index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.php [L]
+</IfModule>

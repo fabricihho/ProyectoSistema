@@ -1,0 +1,101 @@
+/**
+ * Estilos del Sidebar - Sistema TAMEP
+ */
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 250px;
+    background: var(--tamep-azul);
+    color: var(--tamep-blanco);
+    padding: 20px 0;
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.sidebar-header {
+    padding: 0 20px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 20px;
+}
+
+.sidebar-header h1 {
+    font-size: 18px;
+    color: var(--tamep-amarillo);
+    margin-bottom: 5px;
+}
+
+.sidebar-header .user-info {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.sidebar-menu {
+    list-style: none;
+}
+
+.sidebar-menu li {
+    margin-bottom: 5px;
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    color: var(--tamep-blanco);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.sidebar-menu a:hover,
+.sidebar-menu a.active {
+    background: rgba(255, 255, 255, 0.1);
+    border-left: 3px solid var(--tamep-amarillo);
+}
+
+.sidebar-menu a svg,
+.sidebar-menu a i {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.main-content {
+    flex: 1;
+    margin-left: 250px;
+    padding: 20px;
+    background: var(--tamep-gris-claro);
+}
+
+.main-header {
+    background: var(--tamep-blanco);
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.main-header h1 {
+    color: var(--tamep-azul);
+    font-size: 24px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .layout {
+        flex-direction: column;
+    }
+}
