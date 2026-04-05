@@ -14,11 +14,11 @@ return [
     
     // --- CONEXIÓN LOCAL (ACTIVA) ---
     'driver' => 'mysql',
-    'host' => bocxko2tisgkawnthb4r-mysql.services.clever-cloud.com,
+    'host' => 'bocxko2tisgkawnthb4r-mysql.services.clever-cloud.com',
     'port' => getenv('MYSQL_ADDON_PORT') ?: 3306,
-    'database' => bocxko2tisgkawnthb4r,
-    'username' => uqkwnvea8ct8mk4n',
-    'password' => 7RElxdgQv2fp4Pe7QcfR,
+    'database' => 'bocxko2tisgkawnthb4r',
+    'username' => 'uqkwnvea8ct8mk4n',
+    'password' => '7RElxdgQv2fp4Pe7QcfR',
     'charset' => 'utf8mb4',
 
     'options' => [
