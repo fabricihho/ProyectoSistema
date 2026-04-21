@@ -39,7 +39,7 @@ $user = $user ?? \TAMEP\Core\Session::user();
             </li>
 
             <li>
-                <details <?= (str_contains($_SERVER['REQUEST_URI'] ?? '', '/catalogacion') || str_contains($_SERVER['REQUEST_URI'] ?? '', '/contenedores') || str_contains($_SERVER['REQUEST_URI'] ?? '', '/configuracion/tipos')) ? 'open' : '' ?>>
+                <details <?= (str_contains($_SERVER['REQUEST_URI'] ?? '', '/catalogacion') || str_contains($_SERVER['REQUEST_URI'] ?? '', '/contenedores')) ? 'open' : '' ?>>
                     <summary class="sidebar-link" style="cursor: pointer;">
                         <span class="icon">📂</span>
                         <span>Documentos</span>
@@ -47,7 +47,6 @@ $user = $user ?? \TAMEP\Core\Session::user();
                     <ul class="sidebar-submenu">
                         <li><a href="/catalogacion">📄 Buscar Documentos</a></li>
                         <li><a href="/contenedores">📦 Buscar Contenedores</a></li>
-                        <li><a href="/configuracion/tipos">📄 Tipos de Documento</a></li>
                     </ul>
                 </details>
             </li>
@@ -105,12 +104,15 @@ $user = $user ?? \TAMEP\Core\Session::user();
                 </details>
             </li>
             <li>
-                <details <?= (str_contains($_SERVER['REQUEST_URI'] ?? '', '/configuracion') && !str_contains($_SERVER['REQUEST_URI'] ?? '', '/configuracion/tipos')) ? 'open' : '' ?>>
+                <details <?= str_contains($_SERVER['REQUEST_URI'] ?? '', '/configuracion') ? 'open' : '' ?>>
                     <summary class="sidebar-link" style="cursor: pointer;">
                         <span class="icon">🔧</span>
                         <span>Configuración</span>
                     </summary>
                     <ul class="sidebar-submenu">
+                        <li><a href="/configuracion/tipos">📄 Tipos de Documento</a></li>
+                        <li><a href="/configuracion/ubicaciones">📍 Ubicaciones</a></li>
+                        <li><a href="/configuracion/unidades">🏢 Unidades / Áreas</a></li>
                         <li><a href="/configuracion/password">🔑 Cambiar Contraseña</a></li>
                     </ul>
                 </details>

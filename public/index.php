@@ -121,5 +121,21 @@ $router->get('/configuracion/tipos/eliminar/{id}', 'ConfiguracionController@elim
 $router->get('/configuracion/password', 'ConfiguracionController@password', ['AuthMiddleware']);
 $router->post('/configuracion/password/actualizar', 'ConfiguracionController@updatePassword', ['AuthMiddleware']);
 
+// Ubicaciones
+$router->get('/configuracion/ubicaciones', 'ConfiguracionController@ubicaciones', ['AuthMiddleware']);
+$router->get('/configuracion/ubicaciones/crear', 'ConfiguracionController@crearUbicacion', ['AuthMiddleware', 'WriteAccessMiddleware']);
+$router->post('/configuracion/ubicaciones/guardar', 'ConfiguracionController@guardarUbicacion', ['AuthMiddleware', 'WriteAccessMiddleware']);
+$router->get('/configuracion/ubicaciones/editar/{id}', 'ConfiguracionController@editarUbicacion', ['AuthMiddleware', 'WriteAccessMiddleware']);
+$router->post('/configuracion/ubicaciones/actualizar/{id}', 'ConfiguracionController@actualizarUbicacion', ['AuthMiddleware', 'WriteAccessMiddleware']);
+$router->get('/configuracion/ubicaciones/eliminar/{id}', 'ConfiguracionController@eliminarUbicacion', ['AuthMiddleware', 'WriteAccessMiddleware']);
+
+// Unidades / Áreas
+$router->get('/configuracion/unidades', 'ConfiguracionController@unidades', ['AuthMiddleware']);
+$router->get('/configuracion/unidades/crear', 'ConfiguracionController@crearUnidad', ['AuthMiddleware', 'WriteAccessMiddleware']);
+$router->post('/configuracion/unidades/guardar', 'ConfiguracionController@guardarUnidad', ['AuthMiddleware', 'WriteAccessMiddleware']);
+$router->get('/configuracion/unidades/editar/{id}', 'ConfiguracionController@editarUnidad', ['AuthMiddleware', 'WriteAccessMiddleware']);
+$router->post('/configuracion/unidades/actualizar/{id}', 'ConfiguracionController@actualizarUnidad', ['AuthMiddleware', 'WriteAccessMiddleware']);
+$router->get('/configuracion/unidades/eliminar/{id}', 'ConfiguracionController@eliminarUnidad', ['AuthMiddleware', 'WriteAccessMiddleware']);
+
 // Ejecutar router
 $router->dispatch();

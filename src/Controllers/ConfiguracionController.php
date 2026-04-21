@@ -4,6 +4,8 @@ namespace TAMEP\Controllers;
 
 use TAMEP\Models\Usuario;
 use TAMEP\Models\TipoDocumento;
+use TAMEP\Models\Ubicacion;
+use TAMEP\Models\UnidadArea;
 use TAMEP\Core\AuditLogger;
 use TAMEP\Core\Session;
 
@@ -11,12 +13,16 @@ class ConfiguracionController extends BaseController
 {
     private $usuario;
     private $tipoDocumento;
+    private $ubicacion;
+    private $unidadArea;
 
     public function __construct()
     {
         parent::__construct();
-        $this->usuario = new Usuario();
+        $this->usuario      = new Usuario();
         $this->tipoDocumento = new TipoDocumento();
+        $this->ubicacion    = new Ubicacion();
+        $this->unidadArea   = new UnidadArea();
     }
 
     /**
@@ -358,5 +364,211 @@ class ConfiguracionController extends BaseController
             Session::flash('error', 'Error al eliminar');
         }
         $this->redirect('/configuracion/tipos');
+    }
+
+    // =========================================================
+    // UBICACIONES
+    // =========================================================
+
+    public function ubicaciones()
+    {
+        $this->requireAuth();
+        $this->view('configuracion.ubicaciones.index', [
+            'ubicaciones' => $this->ubicacion->all(),
+            'user'        => Session::user()
+        ]);
+    }
+
+    public function crearUbicacion()
+    {
+        $this->requireAuth();
+        $this->view('configuracion.ubicaciones.form', [
+            'ubicacion' => null,
+            'isNew'     => true,
+            'user'      => Session::user()
+        ]);
+    }
+
+    public function guardarUbicacion()
+    {
+        $this->requireAuth();
+
+        $nombre = trim($_POST['nombre'] ?? '');
+        if (empty($nombre)) {
+            Session::flash('error', 'El nombre es obligatorio');
+            $this->redirect('/configuracion/ubicaciones/crear');
+        }
+
+        $data = [
+            'nombre'      => $nombre,
+            'descripcion' => trim($_POST['descripcion'] ?? ''),
+            'activo'      => isset($_POST['activo']) ? 1 : 0,
+        ];
+
+        try {
+            $id = $this->ubicacion->create($data);
+            AuditLogger::log('CREAR', 'Configuracion', $id, "Se creó Ubicación: {$data['nombre']}");
+            Session::flash('success', 'Ubicación creada exitosamente');
+            $this->redirect('/configuracion/ubicaciones');
+        } catch (\Exception $e) {
+            Session::flash('error', 'Error al crear: ' . $e->getMessage());
+            $this->redirect('/configuracion/ubicaciones/crear');
+        }
+    }
+
+    public function editarUbicacion($id)
+    {
+        $this->requireAuth();
+        $ubicacion = $this->ubicacion->find($id);
+        if (!$ubicacion) {
+            Session::flash('error', 'Ubicación no encontrada');
+            $this->redirect('/configuracion/ubicaciones');
+        }
+        $this->view('configuracion.ubicaciones.form', [
+            'ubicacion' => $ubicacion,
+            'isNew'     => false,
+            'user'      => Session::user()
+        ]);
+    }
+
+    public function actualizarUbicacion($id)
+    {
+        $this->requireAuth();
+        if (!$this->ubicacion->find($id)) {
+            Session::flash('error', 'Ubicación no encontrada');
+            $this->redirect('/configuracion/ubicaciones');
+        }
+
+        $nombre = trim($_POST['nombre'] ?? '');
+        if (empty($nombre)) {
+            Session::flash('error', 'El nombre es obligatorio');
+            $this->redirect('/configuracion/ubicaciones/editar/' . $id);
+        }
+
+        $data = [
+            'nombre'      => $nombre,
+            'descripcion' => trim($_POST['descripcion'] ?? ''),
+            'activo'      => isset($_POST['activo']) ? 1 : 0,
+        ];
+
+        $this->ubicacion->update($id, $data);
+        AuditLogger::log('EDITAR', 'Configuracion', $id, "Se actualizó Ubicación: {$data['nombre']}");
+        Session::flash('success', 'Ubicación actualizada exitosamente');
+        $this->redirect('/configuracion/ubicaciones');
+    }
+
+    public function eliminarUbicacion($id)
+    {
+        $this->requireAuth();
+        try {
+            $this->ubicacion->delete($id);
+            AuditLogger::log('ELIMINAR', 'Configuracion', $id, "Se eliminó Ubicación ID $id");
+            Session::flash('success', 'Ubicación eliminada');
+        } catch (\Exception $e) {
+            Session::flash('error', 'No se puede eliminar: está en uso por contenedores.');
+        }
+        $this->redirect('/configuracion/ubicaciones');
+    }
+
+    // =========================================================
+    // UNIDADES / ÁREAS
+    // =========================================================
+
+    public function unidades()
+    {
+        $this->requireAuth();
+        $this->view('configuracion.unidades.index', [
+            'unidades' => $this->unidadArea->all(),
+            'user'     => Session::user()
+        ]);
+    }
+
+    public function crearUnidad()
+    {
+        $this->requireAuth();
+        $this->view('configuracion.unidades.form', [
+            'unidad' => null,
+            'isNew'  => true,
+            'user'   => Session::user()
+        ]);
+    }
+
+    public function guardarUnidad()
+    {
+        $this->requireAuth();
+
+        $nombre = trim($_POST['nombre'] ?? '');
+        if (empty($nombre)) {
+            Session::flash('error', 'El nombre es obligatorio');
+            $this->redirect('/configuracion/unidades/crear');
+        }
+
+        $data = [
+            'nombre' => $nombre,
+            'activo' => isset($_POST['activo']) ? 1 : 0,
+        ];
+
+        try {
+            $id = $this->unidadArea->create($data);
+            AuditLogger::log('CREAR', 'Configuracion', $id, "Se creó Unidad/Área: {$data['nombre']}");
+            Session::flash('success', 'Unidad/Área creada exitosamente');
+            $this->redirect('/configuracion/unidades');
+        } catch (\Exception $e) {
+            Session::flash('error', 'Error al crear: ' . $e->getMessage());
+            $this->redirect('/configuracion/unidades/crear');
+        }
+    }
+
+    public function editarUnidad($id)
+    {
+        $this->requireAuth();
+        $unidad = $this->unidadArea->find($id);
+        if (!$unidad) {
+            Session::flash('error', 'Unidad/Área no encontrada');
+            $this->redirect('/configuracion/unidades');
+        }
+        $this->view('configuracion.unidades.form', [
+            'unidad' => $unidad,
+            'isNew'  => false,
+            'user'   => Session::user()
+        ]);
+    }
+
+    public function actualizarUnidad($id)
+    {
+        $this->requireAuth();
+        if (!$this->unidadArea->find($id)) {
+            Session::flash('error', 'Unidad/Área no encontrada');
+            $this->redirect('/configuracion/unidades');
+        }
+
+        $nombre = trim($_POST['nombre'] ?? '');
+        if (empty($nombre)) {
+            Session::flash('error', 'El nombre es obligatorio');
+            $this->redirect('/configuracion/unidades/editar/' . $id);
+        }
+
+        $data = [
+            'nombre' => $nombre,
+            'activo' => isset($_POST['activo']) ? 1 : 0,
+        ];
+
+        $this->unidadArea->update($id, $data);
+        AuditLogger::log('EDITAR', 'Configuracion', $id, "Se actualizó Unidad/Área: {$data['nombre']}");
+        Session::flash('success', 'Unidad/Área actualizada exitosamente');
+        $this->redirect('/configuracion/unidades');
+    }
+
+    public function eliminarUnidad($id)
+    {
+        $this->requireAuth();
+        try {
+            $this->unidadArea->delete($id);
+            AuditLogger::log('ELIMINAR', 'Configuracion', $id, "Se eliminó Unidad/Área ID $id");
+            Session::flash('success', 'Unidad/Área eliminada');
+        } catch (\Exception $e) {
+            Session::flash('error', 'No se puede eliminar: está en uso por préstamos.');
+        }
+        $this->redirect('/configuracion/unidades');
     }
 }
